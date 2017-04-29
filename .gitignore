@@ -1,0 +1,11 @@
+.DS_Store
+.idea
+*_book
+
+.tmp
+trash
+
+/**/bower_components
+/**/node_modules
+/**/dist
+/**/build

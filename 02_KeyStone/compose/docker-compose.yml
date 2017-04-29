@@ -1,0 +1,34 @@
+# env PW=${PW} docker-compose up [-d]
+
+version: '2'
+services:
+
+  db_keystone:
+    image: mariadb
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${PW}
+      - MYSQL_DATABASE=keystone
+      - MYSQL_USER=keystone
+      - MYSQL_PASSWORD=${PW}
+    ports:
+      - 3306:3306/tcp
+    command:
+      --character-set-server=utf8
+      --collation-server=utf8_general_ci
+      --default-storage-engine=innodb
+      --innodb_file_per_table=on
+      --max_connections=4096
+
+  keystone:
+    image: mooxe/openstack/keystone
+    restart: always
+    environment:
+      - HOST_KeyStone=db_keystone
+      - OS_PASSWORD=${PW}
+      - OS_AUTH_URL='http://db_keystone:35357/v3'
+    ports:
+      - 35357:35357/tcp
+      - 5000:5000/tcp
+    command:
+      /usr/bin/env bash -c "/root/keystone/connection.sh && tail -f /dev/null"
