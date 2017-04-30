@@ -19,7 +19,7 @@ ifndef HOST_KeyStone
 	$(error HOST_KeyStone is undefined)
 endif
 
-in:
+in: in_check
 	docker run --rm -ti \
 		-e HOST_DB_KeyStone=${HOST_DB_KeyStone} \
 		-e HOST_KeyStone=${HOST_KeyStone} \

@@ -16,7 +16,7 @@ verify:
 					"user": {
 						"name": "admin",
 						"domain": { "id": "default" },
-						"password": "$$OS_PASSWORD"
+						"password": "'$OS_PASSWORD'"
 					}
 				}
 			}
@@ -30,7 +30,9 @@ testEX:
 		--os-project-domain-name default \
 		--os-user-domain-name default \
 		--os-project-name admin \
-		--os-username admin token issue
+		--os-username admin \
+		--os-auth-type password \
+		token issue
 
 testIN:
 	openstack \
@@ -38,4 +40,6 @@ testIN:
 		--os-project-domain-name default \
 		--os-user-domain-name default \
 		--os-project-name demo \
-		--os-username demo token issue
+		--os-username demo \
+		--os-auth-type password \
+		token issue

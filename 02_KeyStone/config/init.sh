@@ -13,7 +13,7 @@ keystone-manage credential_setup \
 
 # bootstrap
 keystone-manage bootstrap \
-  --bootstrap-password ${OS_PASSWD} \
+  --bootstrap-password ${OS_PASSWORD} \
   --bootstrap-admin-url http://${HOST_KeyStone}:35357/v3/ \
   --bootstrap-internal-url http://${HOST_KeyStone}:5000/v3/ \
   --bootstrap-public-url http://${HOST_KeyStone}:5000/v3/ \
