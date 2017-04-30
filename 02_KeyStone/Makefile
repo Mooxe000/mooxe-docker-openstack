@@ -1,4 +1,7 @@
 #
+ifndef PW
+	PW := netserver
+endif
 
 build:
 	docker build -t mooxe/openstack/keystone .
@@ -12,10 +15,10 @@ in:
 db_create:
 	docker run --name=osdb \
 		-d \
-		-e MYSQL_ROOT_PASSWORD=netserver \
+		-e MYSQL_ROOT_PASSWORD=${PW} \
 		-e MYSQL_DATABASE=keystone \
 		-e MYSQL_USER=keystone \
-		-e MYSQL_PASSWORD=netserver \
+		-e MYSQL_PASSWORD=${PW} \
 		-p 3306:3306 \
 		mariadb \
 			--character-set-server=utf8 \
@@ -33,10 +36,21 @@ db_in:
 db_logs:
 	docker logs -f osdb
 
-keystone:
+check_keystone:
+# HOST_DB_KeyStone
+ifndef HOST_DB_KeyStone
+	$(error HOST_DB_KeyStone is undefined)
+endif
+# HOST_KeyStone
+ifndef HOST_KeyStone
+	$(error HOST_KeyStone is undefined)
+endif
+
+keystone: check_keystone
 	docker run --rm -ti \
+		-e HOST_DB_KeyStone=${HOST_DB_KeyStone} \
 		-e HOST_KeyStone=${HOST_KeyStone} \
-		-e OS_PASSWORD=netserver \
+		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL=http://${HOST_KeyStone}:35357/v3 \
 		-p 35357:35357 -p 5000:5000 \
 		mooxe/openstack/keystone /usr/bin/env \

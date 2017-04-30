@@ -3,6 +3,14 @@
 version: '2'
 services:
 
+  # osclient:
+  #   image: mooxe/openstack/osclient
+  #   restart: always
+  #   environment:
+  #     - HOST_KeyStone=db_keystone
+  #     - OS_PASSWORD=${PW}
+  #     - OS_AUTH_URL='http://keystone:35357/v3'
+
   db_keystone:
     image: mariadb
     restart: always
@@ -24,9 +32,10 @@ services:
     image: mooxe/openstack/keystone
     restart: always
     environment:
-      - HOST_KeyStone=db_keystone
+      - HOST_DB_KeyStone=db_keystone
+      - HOST_KeyStone=keystone
       - OS_PASSWORD=${PW}
-      - OS_AUTH_URL='http://db_keystone:35357/v3'
+      - OS_AUTH_URL='http://keystone:35357/v3'
     ports:
       - 35357:35357/tcp
       - 5000:5000/tcp
