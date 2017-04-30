@@ -3,13 +3,15 @@
 version: '2'
 services:
 
-  # osclient:
-  #   image: mooxe/openstack/osclient
-  #   restart: always
-  #   environment:
-  #     - HOST_KeyStone=db_keystone
-  #     - OS_PASSWORD=${PW}
-  #     - OS_AUTH_URL='http://keystone:35357/v3'
+  osclient:
+    image: mooxe/openstack/osclient
+    restart: always
+    environment:
+      - HOST_DB_KeyStone=db_keystone
+      - HOST_KeyStone=keystone
+      - OS_PASSWORD=${PW}
+      - OS_AUTH_URL='http://keystone:35357/v3'
+    command: tail -f /dev/null
 
   db_keystone:
     image: mariadb

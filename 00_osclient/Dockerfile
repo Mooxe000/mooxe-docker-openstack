@@ -2,13 +2,13 @@ FROM mooxe/openstack/base
 
 MAINTAINER FooTearth "footearth@gmail.com"
 
-# system update
+system update
 RUN \
   apt-get update && \
   apt-get -y dist-upgrade
 
 RUN apt-get install -y make python-openstackclient
-ADD ./verify/* /root/osclient/keystone/
+ADD ./verify /root/osclient/keystone
 
 ENV \
   OS_USERNAME=admin \
