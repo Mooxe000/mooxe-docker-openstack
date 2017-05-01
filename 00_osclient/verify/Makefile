@@ -1,14 +1,25 @@
-.demo:
+.keystone:
 	openstack project create --domain default --description "Service Project" service
 	openstack project create --domain default --description "Demo Project" demo
 	openstack user create --domain default --password $$OS_PASSWORD demo
 	openstack role create user
 	openstack role add --project demo --user demo user
 
-demo:
-	@env OS_AUTH_URL='http://keystone:5000/v3' make .demo
+.glance:
+	openstack user create --domain default --password $$OS_PASSWORD glance
+	openstack role add --project service --user glance admin
+	openstack service create --name glance --description "OpenStack Image" image
+	openstack endpoint create --region RegionOne image public http://$$HOST_Glance:9292
+	openstack endpoint create --region RegionOne image internal http://$$HOST_Glance:9292
+	openstack endpoint create --region RegionOne image admin http://$$HOST_Glance:9292
 
-verifyEX:
+keystone:
+	env OS_AUTH_URL='http://${HOST_KeyStone}:5000/v3' make .keystone
+
+glance:
+	env OS_AUTH_URL='http://${HOST_KeyStone}:5000/v3' make .glance
+
+verifyKTEX:
 	openstack \
 		--os-auth-url http://$$HOST_KeyStone:35357/v3 \
 		--os-project-domain-name default \
@@ -18,7 +29,7 @@ verifyEX:
 		--os-auth-type password \
 		token issue
 
-verifyIN:
+verifyKTIN:
 	openstack \
 		--os-auth-url http://$$HOST_KeyStone:5000/v3 \
 		--os-project-domain-name default \

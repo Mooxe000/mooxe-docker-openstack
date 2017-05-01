@@ -25,4 +25,5 @@ in: in_check
 		-e HOST_KeyStone=${HOST_KeyStone} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL=http://${HOST_KeyStone}:35357/v3 \
+		-v $$(pwd)/verify:/root/osclient/keystone \
 		mooxe/openstack/osclient /usr/bin/env fish

@@ -13,13 +13,13 @@ in:
 	docker run -ti mooxe/openstack/keystone /usr/bin/env fish
 
 db_create:
-	docker run --name=osdb \
+	docker run --name=osdbkeystone \
 		-d \
 		-e MYSQL_ROOT_PASSWORD=${PW} \
 		-e MYSQL_DATABASE=keystone \
 		-e MYSQL_USER=keystone \
 		-e MYSQL_PASSWORD=${PW} \
-		-p 3306:3306 \
+		-p 3396:3306 \
 		mariadb \
 			--character-set-server=utf8 \
 			--collation-server=utf8_general_ci \
@@ -28,13 +28,13 @@ db_create:
 			--max_connections=4096
 
 db_remove:
-	docker rm -f osdb
+	docker rm -f osdbkeystone
 
 db_in:
-	docker exec -ti osdb /bin/bash
+	docker exec -ti osdbkeystone /bin/bash
 
 db_logs:
-	docker logs -f osdb
+	docker logs -f osdbkeystone
 
 check_keystone:
 # HOST_DB_KeyStone
@@ -52,6 +52,7 @@ keystone: check_keystone
 		-e HOST_KeyStone=${HOST_KeyStone} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL=http://${HOST_KeyStone}:35357/v3 \
+		-v $$(pwd)/config:/root/keystone \
 		-p 35357:35357 -p 5000:5000 \
 		mooxe/openstack/keystone /usr/bin/env \
 		bash -c "source /root/keystone/connection.sh && fish"
