@@ -2,7 +2,7 @@ FROM mooxe/openstack/base
 
 MAINTAINER FooTearth "footearth@gmail.com"
 
-system update
+# system update
 RUN \
   apt-get update && \
   apt-get -y dist-upgrade

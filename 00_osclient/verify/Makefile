@@ -1,9 +1,12 @@
-demo:
+.demo:
 	openstack project create --domain default --description "Service Project" service
 	openstack project create --domain default --description "Demo Project" demo
 	openstack user create --domain default --password $$OS_PASSWORD demo
 	openstack role create user
 	openstack role add --project demo --user demo user
+
+demo:
+	@env OS_AUTH_URL='http://keystone:5000/v3' make .demo
 
 verifyEX:
 	openstack \
