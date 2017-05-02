@@ -26,7 +26,7 @@ push:
 		echo "-> retag $$ImgName"; \
 		docker tag mooxe/openstack/$$ImgName mooxe/openstack_$$ImgName; \
 		echo "-> push $$ImgName"; \
-		docker push mooxe/openstack_$ImgName; \
+		docker push mooxe/openstack_$$ImgName; \
 	done
 
 pull:
