@@ -1,5 +1,7 @@
-IImgNames = base
+ImgNames = base
 ImgNames += osclient
+ImgNames += keystone
+ImgNames += glance
 
 # print ImageNames
 all:
@@ -53,8 +55,10 @@ endif
 # @SCP_IMGPATH
 download: download_check
 	@for ImgName in $(ImgNames); do \
-		echo "-> download $$ImgName"; \
-		scp $$SCP_OPTIONS $$SCP_USER@$$SCP_HOST:$$SCP_IMGPATH/mooxe_openstack_$$ImgName.img.tar .; \
+		if [ ! -f mooxe_openstack_$$ImgName.img.tar ] ; then \
+			echo "-> download $$ImgName"; \
+			scp $$SCP_OPTIONS $$SCP_USER@$$SCP_HOST:$$SCP_IMGPATH/mooxe_openstack_$$ImgName.img.tar .; \
+		fi \
 	done
 
 load:
