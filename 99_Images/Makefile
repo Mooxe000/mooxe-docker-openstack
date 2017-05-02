@@ -9,6 +9,12 @@ all:
 		echo $$ImgName; \
 	done
 
+build:
+	@for ImgName in $(ImgNames); do \
+		echo "-> build $$ImgName"; \
+		cd ../*$$ImgName && make rebuild; \
+	done
+
 save:
 	@for ImgName in $(ImgNames); do \
 		echo "-> save $$ImgName"; \
