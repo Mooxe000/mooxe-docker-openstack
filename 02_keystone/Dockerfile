@@ -8,7 +8,7 @@ RUN \
   apt-get -y dist-upgrade
 
 RUN apt-get install -y keystone
-ADD ./config /root/keystone
+ADD ./config /root/keystone/config
 
 ENV \
   OS_USERNAME=admin \

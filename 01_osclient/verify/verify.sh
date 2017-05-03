@@ -16,4 +16,4 @@ curl -i \
     }
   }
 }' \
-  http://$HOST_KeyStone:5000/v3/auth/tokens ; echo
+  http://$HOST_KEYSTONE:5000/v3/auth/tokens ; echo

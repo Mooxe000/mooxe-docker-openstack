@@ -8,7 +8,7 @@ RUN \
   apt-get -y dist-upgrade
 
 RUN apt-get install -y glance python-memcache
-ADD ./config /root/glance
+ADD ./config /root/glance/config
 
 ENV \
   OS_USERNAME=admin \
