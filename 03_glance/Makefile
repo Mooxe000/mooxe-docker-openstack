@@ -3,6 +3,14 @@ ifndef PW
 	PW := netserver
 endif
 
+ifdef HOST_ALL
+	HOST_DB_KEYSTONE=$$HOST_ALL
+	HOST_KEYSTONE=$$HOST_ALL
+	HOST_GLANCE=$$HOST_ALL
+	HOST_DB_GLANCE=$$HOST_ALL
+	HOST_MC_GLANCE=$$HOST_ALL
+endif
+
 build:
 	docker build -t mooxe/openstack/glance .
 
@@ -11,6 +19,18 @@ rebuild:
 
 in:
 	docker run -ti mooxe/openstack/glance /usr/bin/env fish
+
+glance:
+	docker run --rm -ti \
+		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
+		-e HOST_DB_GLANCE=${HOST_DB_GLANCE} \
+		-e HOST_MC_GLANCE=${HOST_MC_GLANCE} \
+		-e OS_PASSWORD=${PW} \
+		-e OS_AUTH_URL="http://${HOST_KEYSTONE}:35357/v3" \
+		-v $$(pwd)/config:/root/glance/config \
+		-p 9292:9292 -p 9191:9191 \
+		mooxe/openstack/glance /usr/bin/env \
+		bash -c "source /root/glance/config/connection.sh && fish"
 
 db_create:
 	docker run --name=osdbglance \
@@ -32,3 +52,15 @@ db_remove:
 
 db_logs:
 	docker logs -f osdbglance
+
+mc_create:
+	docker run --name osmcglance \
+	-d \
+	-p 11211:11211 \
+	memcached
+
+mc_remove:
+	docker rm -f osmcglance
+
+mc_logs:
+	docker logs -f osmcglance

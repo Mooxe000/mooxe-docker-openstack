@@ -3,6 +3,11 @@ ifndef PW
 	PW := netserver
 endif
 
+ifdef HOST_ALL
+	HOST_DB_KEYSTONE=$$HOST_ALL
+	HOST_KEYSTONE=$$HOST_ALL
+endif
+
 build:
 	docker build -t mooxe/openstack/keystone .
 
@@ -37,21 +42,21 @@ db_logs:
 	docker logs -f osdbkeystone
 
 check_keystone:
-# HOST_DB_KeyStone
-ifndef HOST_DB_KeyStone
-	$(error HOST_DB_KeyStone is undefined)
+# HOST_DB_KEYSTONE
+ifndef HOST_DB_KEYSTONE
+	$(error HOST_DB_KEYSTONE is undefined)
 endif
-# HOST_KeyStone
-ifndef HOST_KeyStone
-	$(error HOST_KeyStone is undefined)
+# HOST_KEYSTONE
+ifndef HOST_KEYSTONE
+	$(error HOST_KEYSTONE is undefined)
 endif
 
 keystone: check_keystone
 	docker run --rm -ti \
-		-e HOST_DB_KeyStone=${HOST_DB_KeyStone} \
-		-e HOST_KeyStone=${HOST_KeyStone} \
+		-e HOST_DB_KEYSTONE=${HOST_DB_KEYSTONE} \
+		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
 		-e OS_PASSWORD=${PW} \
-		-e OS_AUTH_URL=http://${HOST_KeyStone}:35357/v3 \
+		-e OS_AUTH_URL=http://${HOST_KEYSTONE}:35357/v3 \
 		-v $$(pwd)/config:/root/keystone \
 		-p 35357:35357 -p 5000:5000 \
 		mooxe/openstack/keystone /usr/bin/env \
