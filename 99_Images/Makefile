@@ -19,7 +19,7 @@ build:
 	@if [ ! -f $$CirrosFile ]; then \
 		$(DLCirrosCMD); \
 	else \
-		if [ ! `${CirrosShaSumCMD}` == ${CirrosShaSumDF} ]; then \
+		if [ `${CirrosShaSumCMD}` != ${CirrosShaSumDF} ]; then \
 			echo 'file:' `${CirrosShaSumCMD}`; \
 			echo 'default:' ${CirrosShaSumDF}; \
 			$(DLCirrosCMD); \
