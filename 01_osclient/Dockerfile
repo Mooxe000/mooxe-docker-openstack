@@ -8,7 +8,7 @@ RUN \
   apt-get -y dist-upgrade
 
 RUN apt-get install -y make python-openstackclient
-ADD ./verify /root/osclient/keystone
+ADD ./config /root/osclient/config
 ADD ./images /root/osclient/images
 
 ENV \

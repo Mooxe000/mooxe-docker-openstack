@@ -7,8 +7,8 @@ services:
     image: mooxe/openstack/osclient
     restart: always
     environment:
-      - HOST_DB_KEYSTONE=db_keystone
       - HOST_KEYSTONE=keystone
+      - HOST_GLANCE=glance
       - OS_PASSWORD=${PW}
       - OS_AUTH_URL='http://keystone:35357/v3'
     command: tail -f /dev/null
@@ -34,9 +34,9 @@ services:
     image: mooxe/openstack/keystone
     restart: always
     environment:
+      - HOST_KEYSTONE=keystone
       - HOST_DB_KEYSTONE=db_keystone
       - PORT_DB_KEYSTONE=3306
-      - HOST_KEYSTONE=keystone
       - OS_PASSWORD=${PW}
       - OS_AUTH_URL='http://keystone:35357/v3'
     ports:
