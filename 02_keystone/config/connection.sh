@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ ! -z $PORT_DB_KEYSTONE ]; then
+if [ -z $PORT_DB_KEYSTONE ]; then
   PORT_DB_KEYSTONE=3396
 fi
 

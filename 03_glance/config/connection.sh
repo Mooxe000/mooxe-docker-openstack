@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ ! -z $PORT_DB_GLANCE ]; then
+if [ -z $PORT_DB_GLANCE ]; then
   PORT_DB_GLANCE=3397
 fi
 
