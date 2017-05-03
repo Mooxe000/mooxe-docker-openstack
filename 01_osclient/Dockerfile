@@ -9,6 +9,7 @@ RUN \
 
 RUN apt-get install -y make python-openstackclient
 ADD ./verify /root/osclient/keystone
+ADD ./images /root/osclient/images
 
 ENV \
   OS_USERNAME=admin \
