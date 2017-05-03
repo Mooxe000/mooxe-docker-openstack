@@ -10,6 +10,9 @@ all:
 	done
 
 build:
+	@if [ ! -f ../01_osclient/images/cirros-0.3.5-x86_64-disk.img ]; then \
+		$$(cd ../01_osclient/images/ && make pull); \
+	fi
 	@for ImgName in $(ImgNames); do \
 		echo "-> build $$ImgName"; \
 		cd ../*$$ImgName && make rebuild; \
