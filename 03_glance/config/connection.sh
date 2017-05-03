@@ -29,9 +29,11 @@ done
 sed -i \
   -e "/^#stores = */cstores = file,http" \
   -e "/^#default_store = */cdefault_store = file" \
-  -e "/^#filesystem_store_datadir = */cfilesystem_store_datadir = /root/glance/images" \
+  -e "/^#filesystem_store_datadir = */cfilesystem_store_datadir = /data/glance/images" \
   /etc/glance/glance-api.conf
 
-mkdir -p /root/glance/images
+mkdir -p /data/glance/images
+chown -R glance:glance /data/glance
+ln -s /data/glance/images /root/glance/images
 # cat /etc/glance/glance-api.conf | grep "^[^#]" | less
 # cat /etc/glance/glance-registry.conf | grep "^[^#]" | less

@@ -7,7 +7,7 @@ RUN \
   apt-get update && \
   apt-get -y dist-upgrade
 
-RUN apt-get install -y glance
+RUN apt-get install -y glance python-memcache
 
 ENV \
   OS_USERNAME=admin \
