@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-connection="mysql+pymysql:\/\/glance:${OS_PASSWORD}@${HOST_DB_GLANCE}:3397\/glance"
+if [ ! -z $PORT_DB_GLANCE ]; then
+  PORT_DB_GLANCE=3397
+fi
+
+connection="mysql+pymysql:\/\/glance:${OS_PASSWORD}@${HOST_DB_GLANCE}:${PORT_DB_GLANCE}\/glance"
 auth_uri="auth_uri = http://${HOST_KEYSTONE}:5000"
 auth_uri+="\nauth_uri = http://${HOST_KEYSTONE}:35357"
 memcached_servers="${HOST_MC_GLANCE}:11211"

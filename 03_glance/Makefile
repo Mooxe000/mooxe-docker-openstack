@@ -4,9 +4,7 @@ ifndef PW
 endif
 
 ifdef HOST_ALL
-	HOST_DB_KEYSTONE=$$HOST_ALL
 	HOST_KEYSTONE=$$HOST_ALL
-	HOST_GLANCE=$$HOST_ALL
 	HOST_DB_GLANCE=$$HOST_ALL
 	HOST_MC_GLANCE=$$HOST_ALL
 endif
@@ -19,6 +17,20 @@ rebuild:
 
 in:
 	docker run -ti mooxe/openstack/glance /usr/bin/env fish
+
+check_glance:
+# HOST_KEYSTONE
+ifndef HOST_KEYSTONE
+	$(error HOST_KEYSTONE is undefined)
+endif
+# HOST_DB_GLANCE
+ifndef HOST_DB_GLANCE
+	$(error HOST_DB_GLANCE is undefined)
+endif
+# HOST_MC_GLANCE
+ifndef HOST_MC_GLANCE
+	$(error HOST_MC_GLANCE is undefined)
+endif
 
 glance:
 	docker run --rm -ti \
