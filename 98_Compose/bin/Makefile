@@ -36,14 +36,14 @@ DB_PW:=${PW}
 endif
 
 db_init: check_db_init
+	./schema.sh && \
 	docker run --rm -ti --name=osdbinit \
 		-e DB_HOST=${DB_HOST} \
 		-e DB_PORT=${DB_PORT} \
 		-e DB_PW=${DB_PW} \
-		-v $$(pwd)/schema.sh:/data/schema.sh \
-		mariadb /usr/bin/env bash -c " \
-			cd /data/ && ./schema.sh && \
-			mysql \
+		-v $$(pwd)/schema.sql:/data/schema.sql \
+		mariadb bash -c " \
+			mysql -v \
 				-h${DB_HOST} \
 				-P${DB_PORT} \
 				-uroot \
@@ -52,25 +52,31 @@ db_init: check_db_init
 				< /data/schema.sql"
 
 mc_create:
-	docker run --name osmcglance \
-	-d \
-	-p 11211:11211 \
-	memcached
+	docker run --name osmc \
+		-d \
+		-p 11211:11211 \
+		memcached
 
 mc_remove:
-	docker rm -f osmcglance
+	docker rm -f osmc
 
 mc_logs:
-	docker logs -f osmcglance
+	docker logs -f osmc
 
-data_create:
-	cd ../../02_keystone && make db_create
-	cd ../../03_glance && make db_create
-	cd ../../03_glance && make mc_create
-	cd ../../04_nova && make db_create
+mq_create:
+	docker run --name osmq \
+		-e RABBITMQ_DEFAULT_USER=openstack \
+		-e RABBITMQ_DEFAULT_PASS=${PW} \
+		-d \
+		-p 5672:5672 \
+		rabbitmq
 
-data_remove:
-	cd ../../02_keystone && make db_remove
-	cd ../../03_glance && make db_remove
-	cd ../../03_glance && make mc_remove
-	cd ../../04_nova && make db_remove
+mq_remove:
+	docker rm -f osmq
+
+mq_logs:
+	docker logs -f osmq
+
+service_create: db_create mc_create mq_create
+
+service_remove: db_remove mc_remove mq_remove
