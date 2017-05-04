@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
-if [ -z $PORT_DB_GLANCE ]; then
-  PORT_DB_GLANCE=3397
+if [ -z $PORT_DB_NOVAAPI ]; then
+  PORT_DB_NOVAAPI=3393
+fi
+if [ -z $PORT_DB_NOVA ]; then
+  PORT_DB_NOVA=3394
 fi
 
 # apt install -y vim
-cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
+# cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
 
 nova_conf_file='/etc/nova/nova.conf'
 

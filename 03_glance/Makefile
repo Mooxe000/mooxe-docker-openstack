@@ -32,11 +32,12 @@ ifndef HOST_MC_GLANCE
 	$(error HOST_MC_GLANCE is undefined)
 endif
 
+# -e PORT_DB_GLANCE=3306 \
+
 glance:
 	docker run --rm -ti \
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
 		-e HOST_DB_GLANCE=${HOST_DB_GLANCE} \
-		-e PORT_DB_GLANCE=3306 \
 		-e HOST_MC_GLANCE=${HOST_MC_GLANCE} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL="http://${HOST_KEYSTONE}:35357/v3" \

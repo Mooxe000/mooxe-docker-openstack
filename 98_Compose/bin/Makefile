@@ -42,14 +42,16 @@ db_init: check_db_init
 		-e DB_PORT=${DB_PORT} \
 		-e DB_PW=${DB_PW} \
 		-v $$(pwd)/schema.sql:/data/schema.sql \
-		mariadb bash -c " \
-			mysql -v \
-				-h${DB_HOST} \
-				-P${DB_PORT} \
-				-uroot \
-				-p${DB_PW} \
-				--protocol=tcp \
-				< /data/schema.sql"
+		mariadb bash
+
+# mariadb bash -c " \
+	mysql -v \
+		-h${DB_HOST} \
+		-P${DB_PORT} \
+		-uroot \
+		-p${DB_PW} \
+		--protocol=tcp \
+		< /data/schema.sql"
 
 mc_create:
 	docker run --name osmc \
@@ -77,6 +79,16 @@ mq_remove:
 mq_logs:
 	docker logs -f osmq
 
-service_create: db_create mc_create mq_create
+# db_create mc_create mq_create
+service_create: mc_create mq_create
+	cd ../../02_keystone && make db_create
+	cd ../../03_glance && make db_create
+	cd ../../04_nova && make db_create_novaapi
+	cd ../../04_nova && make db_create_nova
+	cd ../../04_nova && make db_create_novacell0
 
-service_remove: db_remove mc_remove mq_remove
+# db_remove mc_remove mq_remove
+service_remove:
+	@for sn in $$(docker ps -a | grep '[osdb|osmc|osmq]' | awk '{print $$1}'); do \
+		docker rm -f $$sn; \
+	done
