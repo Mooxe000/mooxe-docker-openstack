@@ -3,18 +3,6 @@ ifndef PW
 	PW := netserver
 endif
 
-data_create:
-	cd ../../02_keystone && make db_create
-	cd ../../03_glance && make db_create
-	cd ../../03_glance && make mc_create
-	cd ../../04_nova && make db_create
-
-data_remove:
-	cd ../../02_keystone && make db_remove
-	cd ../../03_glance && make db_remove
-	cd ../../03_glance && make mc_remove
-	cd ../../04_nova && make db_remove
-
 db_create:
 	docker run --name=osdb \
 		-d \
@@ -27,6 +15,12 @@ db_create:
 			--innodb_file_per_table=on \
 			--max_connections=4096
 
+db_remove:
+	docker rm -f osdb
+
+db_logs:
+	docker logs -f osdb
+
 check_db_init:
 # DB_HOST
 ifndef DB_HOST
@@ -34,11 +28,11 @@ ifndef DB_HOST
 endif
 # DB_PORT
 ifndef DB_PORT
-DB_PORT=3306
+DB_PORT:=3306
 endif
 # DB_PW
 ifndef DB_PW
-	$(error DB_PW is undefined)
+DB_PW:=${PW}
 endif
 
 db_init: check_db_init
@@ -56,3 +50,27 @@ db_init: check_db_init
 				-p${DB_PW} \
 				--protocol=tcp \
 				< /data/schema.sql"
+
+mc_create:
+	docker run --name osmcglance \
+	-d \
+	-p 11211:11211 \
+	memcached
+
+mc_remove:
+	docker rm -f osmcglance
+
+mc_logs:
+	docker logs -f osmcglance
+
+data_create:
+	cd ../../02_keystone && make db_create
+	cd ../../03_glance && make db_create
+	cd ../../03_glance && make mc_create
+	cd ../../04_nova && make db_create
+
+data_remove:
+	cd ../../02_keystone && make db_remove
+	cd ../../03_glance && make db_remove
+	cd ../../03_glance && make mc_remove
+	cd ../../04_nova && make db_remove

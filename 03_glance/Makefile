@@ -36,6 +36,7 @@ glance:
 	docker run --rm -ti \
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
 		-e HOST_DB_GLANCE=${HOST_DB_GLANCE} \
+		-e PORT_DB_GLANCE=3306 \
 		-e HOST_MC_GLANCE=${HOST_MC_GLANCE} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL="http://${HOST_KEYSTONE}:35357/v3" \
@@ -64,15 +65,3 @@ db_remove:
 
 db_logs:
 	docker logs -f osdbglance
-
-mc_create:
-	docker run --name osmcglance \
-	-d \
-	-p 11211:11211 \
-	memcached
-
-mc_remove:
-	docker rm -f osmcglance
-
-mc_logs:
-	docker logs -f osmcglance

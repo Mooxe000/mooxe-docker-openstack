@@ -54,6 +54,7 @@ endif
 keystone: check_keystone
 	docker run --rm -ti \
 		-e HOST_DB_KEYSTONE=${HOST_DB_KEYSTONE} \
+		-e PORT_DB_KEYSTONE=3306 \
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL=http://${HOST_KEYSTONE}:35357/v3 \
