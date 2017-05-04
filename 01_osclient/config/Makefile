@@ -13,11 +13,30 @@
 	openstack endpoint create --region RegionOne image internal http://$$HOST_GLANCE:9292
 	openstack endpoint create --region RegionOne image admin http://$$HOST_GLANCE:9292
 
+.nova:
+# nova
+	openstack user create --domain default --password $$OS_PASSWORD nova
+	openstack role add --project service --user nova admin
+	openstack service create --name nova --description "OpenStack Compute" compute
+	openstack endpoint create --region RegionOne compute public http://$$HOST_NOVA:8774/v2.1
+	openstack endpoint create --region RegionOne compute internal http://$$HOST_NOVA:8774/v2.1
+	openstack endpoint create --region RegionOne compute admin http://$$HOST_NOVA:8774/v2.1
+# placement
+	openstack user create --domain default --password $$OS_PASSWORD placement
+	openstack role add --project service --user placement admin
+	openstack service create --name placement --description "Placement API" placement
+	openstack endpoint create --region RegionOne placement public http://$$HOST_NOVA/placement
+	openstack endpoint create --region RegionOne placement internal http://$$HOST_NOVA/placement
+	openstack endpoint create --region RegionOne placement admin http://$$HOST_NOVA/placement
+
 keystone:
 	env OS_AUTH_URL='http://${HOST_KEYSTONE}:5000/v3' make .keystone
 
 glance:
 	env OS_AUTH_URL='http://${HOST_KEYSTONE}:5000/v3' make .glance
+
+nova:
+	env OS_AUTH_URL='http://${HOST_KEYSTONE}:5000/v3' make .nova
 
 verifyKTEX:
 	openstack \

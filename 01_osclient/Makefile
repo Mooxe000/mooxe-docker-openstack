@@ -6,6 +6,7 @@ endif
 ifdef HOST_ALL
 	HOST_KEYSTONE=$$HOST_ALL
 	HOST_GLANCE=$$HOST_ALL
+	HOST_NOVA=$$HOST_ALL
 endif
 
 build:
@@ -23,11 +24,16 @@ endif
 ifndef HOST_GLANCE
 	$(error HOST_GLANCE is undefined)
 endif
+# HOST_NOVA
+ifndef HOST_NOVA
+	$(error HOST_NOVA is undefined)
+endif
 
 in: in_check
 	docker run --rm -ti \
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
 		-e HOST_GLANCE=${HOST_GLANCE} \
+		-e HOST_NOVA=${HOST_NOVA} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL=http://${HOST_KEYSTONE}:35357/v3 \
 		-v $$(pwd)/config:/root/osclient/config \

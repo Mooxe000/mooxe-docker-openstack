@@ -2,6 +2,7 @@ ImgNames = base
 ImgNames += osclient
 ImgNames += keystone
 ImgNames += glance
+ImgNames += nova
 
 # print ImageNames
 all:
