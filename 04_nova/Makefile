@@ -21,7 +21,7 @@ nova:
 		bash -c "source /root/nova/config/connection.sh && fish"
 
 db_create:
-	docker run --name=osdbnovaapi \
+	docker run --name=osdbnova \
 		-d \
 		-e MYSQL_ROOT_PASSWORD=${PW} \
 		-e MYSQL_DATABASE=nova_api \
