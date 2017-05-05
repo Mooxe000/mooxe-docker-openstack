@@ -3,7 +3,7 @@ ImgNames += osclient
 ImgNames += keystone
 ImgNames += glance
 ImgNames += nova
-ImgNames += dashboard
+ImgNames += horizon
 
 # print ImageNames
 all:
