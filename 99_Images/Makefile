@@ -4,6 +4,7 @@ ImgNames += keystone
 ImgNames += glance
 ImgNames += nova
 ImgNames += compute
+ImgNames += neutron
 ImgNames += horizon
 
 # print ImageNames
