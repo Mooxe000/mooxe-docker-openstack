@@ -30,7 +30,16 @@ line_db="connection = ${connection_nova}"
 
 # [DEFAULT] TODO
 transport_url="rabbit://openstack:${OS_PASSWORD}@${HOST_MQ}"
-line_df="transport_url = ${transport_url}"
+line_df="transport_url = ${transport_url}\n"
+line_df+="my_ip = ${HOST_KEYSTONE}\n"
+line_df+='use_neutron = True\n'
+line_df+='firewall_driver = nova.virt.firewall.NoopFirewallDriver'
+
+# [vnc]
+line_vnc=""
+line_vnc+="enabled = true\n"
+line_vnc+="vncserver_listen = \$my_ip\n"
+line_vnc+="vncserver_proxyclient_address = \$my_ip"
 
 # [api]
 auth_strategy='keystone'
@@ -73,6 +82,7 @@ sed -i \
   -e "/^\[api_database\]*/a${line_apidb}" \
   -e "/^\[database\]*/a${line_db}" \
   -e "/^\[DEFAULT\]*/a${line_df}" \
+  -e "/^\[vnc\]*/a${line_vnc}" \
   -e "/^\[api\]*/a${line_api}" \
   -e "/^\[keystone_authtoken\]*/a${line_ka}" \
   -e "/^\[glance\]*/a${line_glance}" \
@@ -82,6 +92,10 @@ sed -i \
   -e "/^lock_path=\/var\/lock\/nova/d" \
   -e "/^os_region_name = openstack/d" \
   ${nova_conf_file}
+
+sed -i \
+  -e "/^\[filter:authtoken\]*/aauth_url = http://${HOST_KEYSTONE}:35357" \
+  /etc/nova/api-paste.ini
 
 # grep "^[^#]" /etc/nova/nova.conf | less
 # cp /etc/nova/nova.conf.bak /etc/nova/nova.conf

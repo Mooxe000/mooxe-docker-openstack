@@ -4,9 +4,11 @@ ifndef PW
 endif
 
 db_create:
+	./schema.sh && \
 	docker run --name=osdb \
 		-d \
 		-e MYSQL_ROOT_PASSWORD=${PW} \
+		-v $$(pwd)/schema.sql:/data/schema.sql \
 		-p 3306:3306 \
 		mariadb \
 			--character-set-server=utf8 \
@@ -21,37 +23,13 @@ db_remove:
 db_logs:
 	docker logs -f osdb
 
-check_db_init:
-# DB_HOST
-ifndef DB_HOST
-	$(error DB_HOST is undefined)
-endif
-# DB_PORT
-ifndef DB_PORT
-DB_PORT:=3306
-endif
-# DB_PW
-ifndef DB_PW
-DB_PW:=${PW}
-endif
-
-db_init: check_db_init
-	./schema.sh && \
-	docker run --rm -ti --name=osdbinit \
-		-e DB_HOST=${DB_HOST} \
-		-e DB_PORT=${DB_PORT} \
-		-e DB_PW=${DB_PW} \
-		-v $$(pwd)/schema.sql:/data/schema.sql \
-		mariadb bash
-
-# mariadb bash -c " \
-	mysql -v \
-		-h${DB_HOST} \
-		-P${DB_PORT} \
-		-uroot \
-		-p${DB_PW} \
-		--protocol=tcp \
-		< /data/schema.sql"
+db_init:
+	docker exec -ti \
+		osdb bash -c " \
+			mysql -v \
+				-hlocalhost \
+				-p${PW} \
+				< /data/schema.sql"
 
 mc_create:
 	docker run --name osmc \
@@ -92,3 +70,6 @@ service_remove:
 	@for sn in $$(docker ps -a | grep '[osdb|osmc|osmq]' | awk '{print $$1}'); do \
 		docker rm -f $$sn; \
 	done
+
+service_aio_create: db_create mc_create mq_create
+service_aio_remove: db_remove mc_remove mq_remove

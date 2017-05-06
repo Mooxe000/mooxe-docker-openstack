@@ -7,9 +7,9 @@ schemaSQL=""
 for db in \
   keystone,keystone \
   glance,glance \
-  nava_cell0,nova \
+  nova_api,nova \
   nova,nova \
-  nava_api,nova \
+  nova_cell0,nova \
 ; do
   dbname=${db%,*}
   dbuser=${db#*,}

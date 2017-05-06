@@ -114,11 +114,11 @@ nova: check_nova
 		-e HOST_MC_GLANCE=${HOST_MC_GLANCE} \
 		-e HOST_MQ=${HOST_MQ} \
 		-e HOST_DB_NOVAAPI=${HOST_DB_NOVAAPI} \
-		-e PORT_DB_NOVAAPI=3393 \
+		-e PORT_DB_NOVAAPI=3306 \
 		-e HOST_DB_NOVA=${HOST_DB_NOVA} \
-		-e PORT_DB_NOVA=3394 \
+		-e PORT_DB_NOVA=3306 \
 		-e HOST_DB_NOVACELL0=${HOST_DB_NOVACELL0} \
-		-e PORT_DB_NOVACELL0=3395 \
+		-e PORT_DB_NOVACELL0=3306 \
 		-e OS_PASSWORD=${PW} \
 		-p 8774:8774 \
 		-v $$(pwd)/config:/root/nova/config \

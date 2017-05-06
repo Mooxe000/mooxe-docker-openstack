@@ -59,6 +59,7 @@ keystone: check_keystone
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL=http://${HOST_KEYSTONE}:35357/v3 \
+		-e PORT_DB_KEYSTONE=3306 \
 		-v $$(pwd)/config:/root/keystone/config \
 		-p 35357:35357 -p 5000:5000 \
 		mooxe/openstack/keystone /usr/bin/env \
