@@ -109,6 +109,7 @@ endif
 
 nova: check_nova
 	docker run --rm -ti \
+		--privileged \
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
 		-e HOST_GLANCE=${HOST_GLANCE} \
 		-e HOST_MC_GLANCE=${HOST_MC_GLANCE} \
