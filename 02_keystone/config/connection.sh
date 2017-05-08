@@ -10,3 +10,5 @@ sed -i \
 
 sed -i "/fernet_rotate\` command/{n;d}" /etc/keystone/keystone.conf
 sed -i "/fernet_rotate\` command/aprovider = fernet" /etc/keystone/keystone.conf
+
+echo "${compute1_ip}    compute1" >> /etc/hosts

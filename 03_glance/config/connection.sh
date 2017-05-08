@@ -41,3 +41,5 @@ chown -R glance:glance /data/glance
 ln -s /data/glance/images /root/glance/images
 # cat /etc/glance/glance-api.conf | grep "^[^#]" | less
 # cat /etc/glance/glance-registry.conf | grep "^[^#]" | less
+
+echo "${compute1_ip}    compute1" >> /etc/hosts

@@ -36,6 +36,8 @@ in: in_check
 		-e HOST_NOVA=${HOST_NOVA} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL=http://${HOST_KEYSTONE}:35357/v3 \
+		-e compute1_ip=${compute1_ip} \
 		-v $$(pwd)/config:/root/osclient/config \
 		-v $$(pwd)/images:/root/osclient/images \
-		mooxe/openstack/osclient /usr/bin/env fish
+		mooxe/openstack/osclient /usr/bin/env bash -c " \
+			echo \"$compute1_ip		compute1\" >> /etc/hosts && fish"

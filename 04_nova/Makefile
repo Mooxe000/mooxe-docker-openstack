@@ -121,6 +121,7 @@ nova: check_nova
 		-e HOST_DB_NOVACELL0=${HOST_DB_NOVACELL0} \
 		-e PORT_DB_NOVACELL0=3306 \
 		-e OS_PASSWORD=${PW} \
+		-e compute1_ip=${compute1_ip} \
 		-p 8774:8774 \
 		-v $$(pwd)/config:/root/nova/config \
 		mooxe/openstack/nova /usr/bin/env \

@@ -47,7 +47,7 @@ line_api="auth_strategy = ${auth_strategy}"
 
 # [keystone_authtoken]
 auth_uri="auth_uri = http://${HOST_KEYSTONE}:5000\n"
-auth_uri+="auth_uri = http://${HOST_KEYSTONE}:35357"
+auth_url="auth_url = http://${HOST_KEYSTONE}:35357"
 memcached_servers="${HOST_MC_GLANCE}:11211"
 auth_type_nova="auth_type = password\n"
 auth_type_nova+="project_domain_name = default\n"
@@ -56,6 +56,7 @@ auth_type_nova+="project_name = service\n"
 auth_type_nova+="username = nova\n"
 auth_type_nova+="password = ${OS_PASSWORD}"
 line_ka="${auth_uri}\n"
+line_ka+="${auth_url}\n"
 line_ka+="memcached_servers = ${memcached_servers}\n"
 line_ka+="${auth_type_nova}"
 
@@ -101,3 +102,5 @@ sed -i \
 # cp /etc/nova/nova.conf.bak /etc/nova/nova.conf
 # ./connection.sh
 # vi /etc/nova/nova.conf
+
+echo "${compute1_ip}    compute1" >> /etc/hosts

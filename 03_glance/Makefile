@@ -41,6 +41,7 @@ glance:
 		-e HOST_MC_GLANCE=${HOST_MC_GLANCE} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL="http://${HOST_KEYSTONE}:35357/v3" \
+		-e compute1_ip=${compute1_ip} \
 		-e PORT_DB_GLANCE=3306 \
 		-v $$(pwd)/config:/root/glance/config \
 		-p 9292:9292 -p 9191:9191 \
