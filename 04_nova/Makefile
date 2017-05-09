@@ -11,6 +11,7 @@ ifdef HOST_ALL
 	HOST_MQ=$$HOST_ALL
 	HOST_DB_NOVAAPI=$$HOST_ALL
 	HOST_DB_NOVA=$$HOST_ALL
+	compute1_ip=$$HOST_ALL
 endif
 
 build:
@@ -105,6 +106,10 @@ endif
 # HOST_DB_NOVA
 ifndef HOST_DB_NOVA
 	$(error HOST_DB_NOVA is undefined)
+endif
+# compute1_ip
+ifndef compute1_ip
+	$(error compute1_ip is undefined)
 endif
 
 nova: check_nova

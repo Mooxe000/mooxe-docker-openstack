@@ -4,11 +4,9 @@ ifndef PW
 endif
 
 db_create:
-	./schema.sh && \
 	docker run --name=osdb \
 		-d \
 		-e MYSQL_ROOT_PASSWORD=${PW} \
-		-v $$(pwd)/schema.sql:/data/schema.sql \
 		-p 3306:3306 \
 		mariadb \
 			--character-set-server=utf8 \
@@ -23,13 +21,21 @@ db_remove:
 db_logs:
 	docker logs -f osdb
 
-db_init:
-	docker exec -ti \
-		osdb bash -c " \
-			mysql -v \
-				-hlocalhost \
-				-p${PW} \
-				< /data/schema.sql"
+check_db_init:
+# HOST_DB
+ifndef HOST_DB
+	$(error HOST_DB is undefined)
+endif
+
+db_init: check_db_init
+	docker run -ti --rm --name=osdbinit \
+		-v $$(pwd)/schema.sh:/data/schema.sh \
+		mariadb bash -c " \
+	 	cd /data && . schema.sh && \
+		mysql -v \
+			-h${HOST_DB} \
+			-p${PW} \
+			< /data/schema.sql"
 
 mc_create:
 	docker run --name osmc \

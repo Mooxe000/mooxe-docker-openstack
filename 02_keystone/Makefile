@@ -6,6 +6,7 @@ endif
 ifdef HOST_ALL
 	HOST_DB_KEYSTONE=$$HOST_ALL
 	HOST_KEYSTONE=$$HOST_ALL
+	compute1_ip=$$HOST_ALL
 endif
 
 build:
@@ -50,16 +51,20 @@ endif
 ifndef HOST_KEYSTONE
 	$(error HOST_KEYSTONE is undefined)
 endif
+# compute1_ip
+ifndef compute1_ip
+	$(error compute1_ip is undefined)
+endif
 
 # -e PORT_DB_KEYSTONE=3306 \
 
 keystone: check_keystone
 	docker run --rm -ti \
-		-e HOST_DB_KEYSTONE=${HOST_DB_KEYSTONE} \
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
+		-e HOST_DB_KEYSTONE=${HOST_DB_KEYSTONE} \
+		-e PORT_DB_KEYSTONE=3306 \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL=http://${HOST_KEYSTONE}:35357/v3 \
-		-e PORT_DB_KEYSTONE=3306 \
 		-e compute1_ip=${compute1_ip} \
 		-v $$(pwd)/config:/root/keystone/config \
 		-p 35357:35357 -p 5000:5000 \

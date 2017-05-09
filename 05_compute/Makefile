@@ -7,6 +7,7 @@ endif
 ifdef HOST_ALL
 	HOST_KEYSTONE=$$HOST_ALL
 	HOST_GLANCE=$$HOST_ALL
+	compute1_ip=$$HOST_ALL
 endif
 
 build:
@@ -21,11 +22,24 @@ in:
 		mooxe/openstack/compute \
 		/usr/bin/env fish
 
-compute:
+check_compute:
+# HOST_KEYSTONE
+ifndef HOST_KEYSTONE
+	$(error HOST_KEYSTONE is undefined)
+endif
+# HOST_GLANCE
+ifndef HOST_GLANCE
+	$(error HOST_GLANCE is undefined)
+endif
+# compute1_ip
+ifndef compute1_ip
+	$(error compute1_ip is undefined)
+endif
+
+compute: check_compute
 	docker run --rm -ti \
 		--privileged \
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
-		-e HOST_GLANCE=${HOST_GLANCE} \
 		-e HOST_GLANCE=${HOST_GLANCE} \
 		-e compute1_ip=${compute1_ip} \
 		-e OS_PASSWORD=${PW} \

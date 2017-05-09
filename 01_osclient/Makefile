@@ -7,6 +7,7 @@ ifdef HOST_ALL
 	HOST_KEYSTONE=$$HOST_ALL
 	HOST_GLANCE=$$HOST_ALL
 	HOST_NOVA=$$HOST_ALL
+	compute1_ip=$$HOST_ALL
 endif
 
 build:
@@ -27,6 +28,9 @@ endif
 # HOST_NOVA
 ifndef HOST_NOVA
 	$(error HOST_NOVA is undefined)
+endif
+ifndef compute1_ip
+	$(error compute1_ip is undefined)
 endif
 
 in: in_check

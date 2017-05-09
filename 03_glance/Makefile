@@ -7,6 +7,7 @@ ifdef HOST_ALL
 	HOST_KEYSTONE=$$HOST_ALL
 	HOST_DB_GLANCE=$$HOST_ALL
 	HOST_MC_GLANCE=$$HOST_ALL
+	compute1_ip=$$HOST_ALL
 endif
 
 build:
@@ -31,6 +32,10 @@ endif
 ifndef HOST_MC_GLANCE
 	$(error HOST_MC_GLANCE is undefined)
 endif
+# compute1_ip
+ifndef compute1_ip
+	$(error compute1_ip is undefined)
+endif
 
 # -e PORT_DB_GLANCE=3306 \
 
@@ -38,11 +43,11 @@ glance:
 	docker run --rm -ti \
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
 		-e HOST_DB_GLANCE=${HOST_DB_GLANCE} \
+		-e PORT_DB_GLANCE=3306 \
 		-e HOST_MC_GLANCE=${HOST_MC_GLANCE} \
 		-e OS_PASSWORD=${PW} \
 		-e OS_AUTH_URL="http://${HOST_KEYSTONE}:35357/v3" \
 		-e compute1_ip=${compute1_ip} \
-		-e PORT_DB_GLANCE=3306 \
 		-v $$(pwd)/config:/root/glance/config \
 		-p 9292:9292 -p 9191:9191 \
 		mooxe/openstack/glance /usr/bin/env \

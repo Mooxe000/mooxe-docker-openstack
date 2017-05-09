@@ -3,26 +3,13 @@
 version: '2'
 services:
 
-  osclient:
-    image: mooxe/openstack/osclient
-    restart: always
-    environment:
-      - HOST_KEYSTONE=keystone
-      - HOST_GLANCE=glance
-      - OS_PASSWORD=${PW}
-      - OS_AUTH_URL='http://keystone:35357/v3'
-    command: tail -f /dev/null
-
-  db_keystone:
+  osdb:
     image: mariadb
     restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=${PW}
-      - MYSQL_DATABASE=keystone
-      - MYSQL_USER=keystone
-      - MYSQL_PASSWORD=${PW}
     ports:
-      - 3396:3306/tcp
+      - 3306:3306/tcp
     command:
       --character-set-server=utf8
       --collation-server=utf8_general_ci
@@ -30,12 +17,38 @@ services:
       --innodb_file_per_table=on
       --max_connections=4096
 
+  osmc:
+    image: memcached
+    restart: always
+    ports:
+      - 11211:11211/tcp
+
+  osmq:
+    image: rabbitmq
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=openstack
+      - RABBITMQ_DEFAULT_PASS=${PW}
+    ports:
+      - 5672:5672/tcp
+
+  osclient:
+    image: mooxe/openstack/osclient
+    restart: always
+    environment:
+      - HOST_KEYSTONE=keystone
+      - HOST_GLANCE=glance
+      - HOST_NOVA=nova
+      - OS_PASSWORD=${PW}
+      - OS_AUTH_URL='http://keystone:35357/v3'
+    command: tail -f /dev/null
+
   keystone:
     image: mooxe/openstack/keystone
     restart: always
     environment:
       - HOST_KEYSTONE=keystone
-      - HOST_DB_KEYSTONE=db_keystone
+      - HOST_DB_KEYSTONE=osdb
       - PORT_DB_KEYSTONE=3306
       - OS_PASSWORD=${PW}
       - OS_AUTH_URL='http://keystone:35357/v3'
@@ -45,37 +58,14 @@ services:
     command:
       /usr/bin/env bash -c "/root/keystone/config/connection.sh && tail -f /dev/null"
 
-  db_glance:
-    image: mariadb
-    restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=${PW}
-      - MYSQL_DATABASE=glance
-      - MYSQL_USER=glance
-      - MYSQL_PASSWORD=${PW}
-    ports:
-      - 3397:3306/tcp
-    command:
-      --character-set-server=utf8
-      --collation-server=utf8_general_ci
-      --default-storage-engine=innodb
-      --innodb_file_per_table=on
-      --max_connections=4096
-
-  mc_glance:
-    image: memcached
-    restart: always
-    ports:
-      - 11211:11211/tcp
-
   glance:
     image: mooxe/openstack/glance
     restart: always
     environment:
       - HOST_KEYSTONE=keystone
-      - HOST_DB_GLANCE=db_glance
+      - HOST_DB_GLANCE=osdb
       - PORT_DB_GLANCE=3306
-      - HOST_MC_GLANCE=mc_glance
+      - HOST_MC_GLANCE=osmc
       - OS_PASSWORD=${PW}
       - OS_AUTH_URL='http://keystone:35357/v3'
     ports:
@@ -83,3 +73,35 @@ services:
       - 9292:9292/tcp
     command:
       /usr/bin/env bash -c "/root/glance/config/connection.sh && tail -f /dev/null"
+
+  # nova:
+  #   image: mooxe/openstack/nova
+  #   restart: always
+  #   privileged: true
+  #   environment:
+  #     - HOST_KEYSTONE=keystone
+  #     - HOST_GLANCE=glance
+  #     - HOST_MC_GLANCE=osmc
+  #     - HOST_MQ=osmq
+  #     - HOST_DB_NOVAAPI=osdb
+  #     - PORT_DB_NOVAAPI=3306
+  #     - HOST_DB_NOVA=osdb
+  #     - PORT_DB_NOVA=3306
+  #     - HOST_DB_NOVACELL0=osdb
+  #     - PORT_DB_NOVACELL0=3306
+  #     - OS_PASSWORD=${PW}
+  #   ports:
+  #     - 8774:8774/tcp
+  #   command:
+  #     /usr/bin/env bash -c "/root/glance/config/connection.sh && tail -f /dev/null"
+  #
+  # compute:
+  #   image: mooxe/openstack/compute
+  #   restart: always
+  #   privileged: true
+  #   environment:
+  #     HOST_KEYSTONE: keystone
+  #     HOST_GLANCE: glance
+  #     OS_PASSWORD: ${PW}
+  #   command:
+  #     /usr/bin/env bash -c "/root/glance/config/connection.sh && tail -f /dev/null"
