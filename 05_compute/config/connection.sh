@@ -92,6 +92,3 @@ sed -i \
 sed -i \
   -e "/virt_type=kvm/cvirt_type=qemu" \
   ${nova_compute_conf_file}
-
-service libvirtd restart
-service nova-compute restart

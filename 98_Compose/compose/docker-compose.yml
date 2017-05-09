@@ -40,7 +40,7 @@ services:
       - HOST_GLANCE=glance
       - HOST_NOVA=nova
       - OS_PASSWORD=${PW}
-      - OS_AUTH_URL='http://keystone:35357/v3'
+      - OS_AUTH_URL=http://keystone:35357/v3
     command: tail -f /dev/null
 
   keystone:
@@ -51,7 +51,7 @@ services:
       - HOST_DB_KEYSTONE=osdb
       - PORT_DB_KEYSTONE=3306
       - OS_PASSWORD=${PW}
-      - OS_AUTH_URL='http://keystone:35357/v3'
+      - OS_AUTH_URL=http://keystone:35357/v3
     ports:
       - 35357:35357/tcp
       - 5000:5000/tcp
@@ -67,41 +67,43 @@ services:
       - PORT_DB_GLANCE=3306
       - HOST_MC_GLANCE=osmc
       - OS_PASSWORD=${PW}
-      - OS_AUTH_URL='http://keystone:35357/v3'
+      - OS_AUTH_URL=http://keystone:35357/v3
     ports:
       - 9191:9191/tcp
       - 9292:9292/tcp
     command:
       /usr/bin/env bash -c "/root/glance/config/connection.sh && tail -f /dev/null"
 
-  # nova:
-  #   image: mooxe/openstack/nova
-  #   restart: always
-  #   privileged: true
-  #   environment:
-  #     - HOST_KEYSTONE=keystone
-  #     - HOST_GLANCE=glance
-  #     - HOST_MC_GLANCE=osmc
-  #     - HOST_MQ=osmq
-  #     - HOST_DB_NOVAAPI=osdb
-  #     - PORT_DB_NOVAAPI=3306
-  #     - HOST_DB_NOVA=osdb
-  #     - PORT_DB_NOVA=3306
-  #     - HOST_DB_NOVACELL0=osdb
-  #     - PORT_DB_NOVACELL0=3306
-  #     - OS_PASSWORD=${PW}
-  #   ports:
-  #     - 8774:8774/tcp
-  #   command:
-  #     /usr/bin/env bash -c "/root/glance/config/connection.sh && tail -f /dev/null"
-  #
-  # compute:
-  #   image: mooxe/openstack/compute
-  #   restart: always
-  #   privileged: true
-  #   environment:
-  #     HOST_KEYSTONE: keystone
-  #     HOST_GLANCE: glance
-  #     OS_PASSWORD: ${PW}
-  #   command:
-  #     /usr/bin/env bash -c "/root/glance/config/connection.sh && tail -f /dev/null"
+  nova:
+    image: mooxe/openstack/nova
+    restart: always
+    privileged: true
+    environment:
+      - HOST_KEYSTONE=keystone
+      - HOST_GLANCE=glance
+      - HOST_MC_GLANCE=osmc
+      - HOST_MQ=osmq
+      - HOST_DB_NOVAAPI=osdb
+      - PORT_DB_NOVAAPI=3306
+      - HOST_DB_NOVA=osdb
+      - PORT_DB_NOVA=3306
+      - HOST_DB_NOVACELL0=osdb
+      - PORT_DB_NOVACELL0=3306
+      - OS_PASSWORD=${PW}
+    ports:
+      - 8774:8774/tcp
+    command:
+      tail -f /dev/null
+      # /usr/bin/env bash -c "/root/glance/config/connection.sh && "
+
+  compute:
+    image: mooxe/openstack/compute
+    restart: always
+    privileged: true
+    environment:
+      HOST_KEYSTONE: keystone
+      HOST_GLANCE: glance
+      OS_PASSWORD: ${PW}
+    command:
+      tail -f /dev/null
+      # /usr/bin/env bash -c "/root/glance/config/connection.sh && "
