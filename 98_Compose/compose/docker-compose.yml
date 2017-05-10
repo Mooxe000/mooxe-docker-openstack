@@ -93,8 +93,7 @@ services:
     ports:
       - 8774:8774/tcp
     command:
-      tail -f /dev/null
-      # /usr/bin/env bash -c "/root/glance/config/connection.sh && "
+      /usr/bin/env bash -c "/root/nova/config/connection.sh && tail -f /dev/null"
 
   compute:
     image: mooxe/openstack/compute
@@ -105,5 +104,4 @@ services:
       HOST_GLANCE: glance
       OS_PASSWORD: ${PW}
     command:
-      tail -f /dev/null
-      # /usr/bin/env bash -c "/root/glance/config/connection.sh && "
+      /usr/bin/env bash -c "/root/compute/config/connection.sh && tail -f /dev/null"

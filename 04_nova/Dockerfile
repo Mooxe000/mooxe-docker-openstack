@@ -12,6 +12,7 @@ RUN \
     nova-api nova-conductor nova-consoleauth \
     nova-novncproxy nova-scheduler \
     nova-placement-api
+ADD ./config /root/nova/config
 
 ENV \
   OS_USERNAME=admin \

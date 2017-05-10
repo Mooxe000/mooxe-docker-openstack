@@ -9,6 +9,7 @@ RUN \
 
 RUN \
   apt-get install -y nova-compute
+ADD ./config /root/compute/config
 
 ENV \
   OS_USERNAME=admin \
