@@ -10,11 +10,25 @@ ifdef HOST_ALL
 	compute1_ip=$$HOST_ALL
 endif
 
+imgName := mooxe/openstack/glance
+
+# env MIRROR_CA="192.168.1.100:8080\\\/cloud-archive" make build
 build:
-	docker build -t mooxe/openstack/glance .
+	@cmd="docker build" && \
+	if [ ! -z ${MIRROR_CA} ]; then \
+		cmd+=" --build-arg MIRROR_CA=$${MIRROR_CA}"; \
+	fi && \
+	cmd+=" -t ${imgName} ." && \
+	bash -c "$${cmd}"
 
 rebuild:
-	docker build --no-cache -t mooxe/openstack/glance .
+	@cmd="docker build" && \
+	cmd+=" --no-cache"; \
+	if [ ! -z ${MIRROR_CA} ]; then \
+		cmd+=" --build-arg MIRROR_CA=$${MIRROR_CA}"; \
+	fi && \
+	cmd+=" -t ${imgName} ." && \
+	bash -c "$${cmd}"
 
 in:
 	docker run -ti mooxe/openstack/glance /usr/bin/env fish

@@ -2,6 +2,17 @@ FROM mooxe/openstack/base
 
 MAINTAINER FooTearth "footearth@gmail.com"
 
+ARG MIRROR_CA
+ENV MIRROR_CA ${MIRROR_CA}
+
+# echo "1: ${MIRROR_CA}" && \
+# echo "2: ${MIRROR_CA}"; \
+RUN \
+  if [ ! -z ${MIRROR_CA} ]; then \
+    sed -i -e "s/ubuntu-cloud.archive.canonical.com/${MIRROR_CA}/g" \
+      /etc/apt/sources.list.d/cloudarchive-ocata.list; \
+  fi
+
 # system update
 RUN \
   apt-get update && \

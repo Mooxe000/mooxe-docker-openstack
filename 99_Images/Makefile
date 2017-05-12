@@ -1,5 +1,5 @@
-ImgNames = base
-ImgNames += osclient
+# ImgNames = base
+ImgNames = osclient
 ImgNames += keystone
 ImgNames += glance
 ImgNames += nova
@@ -19,6 +19,8 @@ CirrosShaSumCMD = shasum -a 256 $(CirrosFile) | awk '{print $$1;}'
 CirrosShaSumDF = 'e137062a4dfbb4c225971b67781bc52183d14517170e16a3841d16f962ae7470'
 CirrosURL = http://download.cirros-cloud.net/0.3.5/cirros-0.3.5-x86_64-disk.img
 DLCirrosCMD = curl -L -o $(CirrosFile) $(CirrosURL)
+
+# env MIRROR_CA="192.168.1.100:8080\\\/cloud-archive" make build
 build:
 	@if [ ! -f $$CirrosFile ]; then \
 		$(DLCirrosCMD); \
@@ -31,7 +33,11 @@ build:
 	fi
 	@for ImgName in $(ImgNames); do \
 		echo "-> build $$ImgName"; \
-		cd ../*$$ImgName && make rebuild; \
+		if [ -z $${MIRROR_CA} ]; then \
+			cd ../*$$ImgName && make rebuild; \
+		else \
+			cd ../*$$ImgName && env MIRROR_CA=$${MIRROR_CA} make rebuild; \
+		fi \
 	done
 
 save:
@@ -92,3 +98,6 @@ load:
 		docker rmi -f mooxe/openstack/$$ImgName; \
 		docker load -i mooxe_openstack_$$ImgName.img.tar; \
 	done
+
+clean:
+	rm -rf ./*.img.tar
