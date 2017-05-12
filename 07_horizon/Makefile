@@ -1,6 +1,6 @@
 #
 
-imgName := mooxe/openstack/neutron
+imgName := mooxe/openstack/horizon
 
 # env MIRROR_CA="192.168.1.100:8080\\\/cloud-archive" make build
 build:
