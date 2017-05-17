@@ -7,6 +7,8 @@ ENV MIRROR_CA ${MIRROR_CA}
 
 RUN \
   if [ ! -z ${MIRROR_CA} ]; then \
+    cp -R /etc/apt/sources.list.d \
+      /etc/apt/sources.list.d.bak; \
     sed -i -e "s/ubuntu-cloud.archive.canonical.com/${MIRROR_CA}/g" \
       /etc/apt/sources.list.d/cloudarchive-ocata.list; \
   fi
@@ -17,7 +19,7 @@ RUN \
   apt-get -y dist-upgrade
 
 RUN \
-  apt-get install -y nova-compute
+  apt-get install -y nova-compute neutron-linuxbridge-agent
 ADD ./config /root/compute/config
 
 ENV \
@@ -32,3 +34,10 @@ ENV \
 RUN \
   apt-get autoremove -y && \
   apt-get clean
+
+RUN \
+  if [ ! -z ${MIRROR_LP} ]; then \
+    rm -rf /etc/apt/sources.list.d; \
+    mv /etc/apt/sources.list.d.bak \
+      /etc/apt/sources.list.d; \
+  fi

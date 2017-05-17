@@ -29,6 +29,14 @@
 	openstack endpoint create --region RegionOne placement internal http://$$HOST_NOVA/placement
 	openstack endpoint create --region RegionOne placement admin http://$$HOST_NOVA/placement
 
+.neutron:
+	openstack user create --domain default --password $$OS_PASSWORD neutron
+	openstack role add --project service --user neutron admin
+	openstack service create --name neutron --description "OpenStack Networking" network
+	openstack endpoint create --region RegionOne network public http://$$HOST_NEUTRON:9696
+	openstack endpoint create --region RegionOne network internal http://$$HOST_NEUTRON:9696
+	openstack endpoint create --region RegionOne network admin http://$$HOST_NEUTRON:9696
+
 keystone:
 	env OS_AUTH_URL='http://${HOST_KEYSTONE}:5000/v3' make .keystone
 
@@ -37,6 +45,9 @@ glance:
 
 nova:
 	env OS_AUTH_URL='http://${HOST_KEYSTONE}:5000/v3' make .nova
+
+neutron:
+	env OS_AUTH_URL='http://${HOST_KEYSTONE}:5000/v3' make .neutron
 
 verifyKTEX:
 	openstack \

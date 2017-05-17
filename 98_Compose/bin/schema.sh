@@ -10,6 +10,7 @@ for db in \
   nova_api,nova \
   nova,nova \
   nova_cell0,nova \
+  neutron,neutron \
 ; do
   dbname=${db%,*}
   dbuser=${db#*,}

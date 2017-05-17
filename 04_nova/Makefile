@@ -7,7 +7,9 @@ endif
 ifdef HOST_ALL
 	HOST_KEYSTONE=$$HOST_ALL
 	HOST_GLANCE=$$HOST_ALL
-	HOST_MC_GLANCE=$$HOST_ALL
+	HOST_NOVA=$$HOST_ALL
+	HOST_NEUTRON=$$HOST_ALL
+	HOST_MC=$$HOST_ALL
 	HOST_MQ=$$HOST_ALL
 	HOST_DB_NOVAAPI=$$HOST_ALL
 	HOST_DB_NOVA=$$HOST_ALL
@@ -105,9 +107,9 @@ check_nova:
 ifndef HOST_KEYSTONE
 	$(error HOST_KEYSTONE is undefined)
 endif
-# HOST_MC_GLANCE
-ifndef HOST_MC_GLANCE
-	$(error HOST_MC_GLANCE is undefined)
+# HOST_MC
+ifndef HOST_MC
+	$(error HOST_MC is undefined)
 endif
 # HOST_MQ
 ifndef HOST_MQ
@@ -131,14 +133,14 @@ nova: check_nova
 		--privileged \
 		-e HOST_KEYSTONE=${HOST_KEYSTONE} \
 		-e HOST_GLANCE=${HOST_GLANCE} \
-		-e HOST_MC_GLANCE=${HOST_MC_GLANCE} \
+		-e HOST_NOVA=${HOST_NOVA} \
+		-e HOST_NEUTRON=${HOST_NEUTRON} \
+		-e HOST_MC=${HOST_MC} \
 		-e HOST_MQ=${HOST_MQ} \
 		-e HOST_DB_NOVAAPI=${HOST_DB_NOVAAPI} \
 		-e PORT_DB_NOVAAPI=3306 \
 		-e HOST_DB_NOVA=${HOST_DB_NOVA} \
 		-e PORT_DB_NOVA=3306 \
-		-e HOST_DB_NOVACELL0=${HOST_DB_NOVACELL0} \
-		-e PORT_DB_NOVACELL0=3306 \
 		-e OS_PASSWORD=${PW} \
 		-e compute1_ip=${compute1_ip} \
 		-p 8774:8774 \

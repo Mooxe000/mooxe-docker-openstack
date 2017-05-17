@@ -3,9 +3,9 @@ FROM mooxe/base:dev
 MAINTAINER FooTearth "footearth@gmail.com"
 
 # system update
-RUN apt-get update
-
-# && \ apt-get -y dist-upgrade
+RUN \
+  apt-get update && \
+  apt-get -y dist-upgrade
 
 RUN apt-get install -y nginx
 ADD ./config /root/mirrors/config
