@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # init DB
-keystone-manage db_sync
+/bin/sh -c "keystone-manage db_sync" keystone
 
 # init fernet
 keystone-manage fernet_setup \
